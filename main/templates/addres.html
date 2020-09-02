@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{# Это приложения предноз-на для отоброжения в шаблоне загружаемых файлов #}
+{% load crispy_forms_tags %}
+
+{% block title %}
+	Главная авторизован
+{% endblock %}
+
+{% block content %}
+	<div class="container text-center">
+		
+		<p>{{user}}</p> <a href="{% url 'logout_url' %}" class="btn btn-secondary btn-sm active" role="button" aria-pressed="true">Выйти</a>
+		<div class="table-responsive-sm">{# нужен для того чтобы полоса прокрутки былы только внутри контейнера - table-responsive  #}
+			<table class="table table-striped table-bordered table-hover table-sm ">
+				<thead>
+					<tr>
+						<th><input type="checkbox" id="select_all"/>Отметить все</th>
+						<th>№</th>
+						<th>Адрес</th>
+						<th>Действия</th>
+					</tr>
+				</thead>
+				<tbody>
+					
+						{% for addres in address %}
+							<tr class="table-success">
+								<td>
+									<input class="checkbox" type="checkbox" class="form-check-input" id="exampleCheck1">
+									<label class="form-check-label" for="exampleCheck1"></label>{{addres.choice}}
+								</td>
+								<td>{{addres.number}}</td>
+								<td>{{addres.name}}</td>
+								<td>
+									<a href="#" class="btn btn-primary btn-sm active" role="button" aria-pressed="true">Редакт</a>
+									<a href="#" class="btn btn-danger btn-sm active" role="button" aria-pressed="true">Удалить</a>
+								</td>
+							</tr>
+			
+						{% endfor %}
+
+					
+				</tbody>
+
+			</table>
+		</div>
+
+		<form action="{% url 'addres_url' %}" method="post" class="form-inline">
+			{% csrf_token %}
+			
+			{% for f in form %}
+				{{f}}
+			{% endfor %}
+			
+
+
+			
+
+			<button type="submit" class="btn btn-primary btn-sm mb-2">Ok</button>
+			<button type="submit" class="btn btn-danger btn-sm mb-2">Отмена</button>
+		</form>
+
+		<div id="show_buttons">
+			<a href="#" class="btn btn-primary btn-sm" role="button" aria-pressed="true">Добавить</a>
+			<a href="#" class="btn btn-danger btn-sm" role="button" aria-pressed="true">Удалить</a>
+		</div>
+	</div>
+{% endblock %}
+
+{% block js %}
+	<script>
+		function hiddenContainer() {
+			document.getElementById("show_buttons").hidden = true;
+		}
+		function showContainer() {
+			document.getElementById("show_buttons").hidden = false;
+		}
+
+		hiddenContainer();
+		var select_all = document.getElementById("select_all"); 
+		var checkboxes = document.getElementsByClassName("checkbox"); 
+		   
+
+		  select_all.addEventListener("change", function(e){
+			for (i = 0; i < checkboxes.length; i++) { 
+				checkboxes[i].checked = select_all.checked;
+			}
+			showContainer();
+			if (select_all.checked == false){
+		  		hiddenContainer();
+		  	}
+		  });
+
+		  for (var i = 0; i < checkboxes.length; i++) {
+			checkboxes[i].addEventListener('change', function(e){
+			
+			if(this.checked == false){
+				select_all.checked = false;
+			}
+			
+			if(document.querySelectorAll('.checkbox:checked').length == checkboxes.length){
+				select_all.checked = true;
+			}
+		});
+		}
+	</script>
+{% endblock %}

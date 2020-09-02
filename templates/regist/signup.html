@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block javascript %}
+{% endblock %}
+
+
+{% block content %}
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p  }}
+    {{ profile_form.as_p }}
+
+	{% if messages %}
+	  <ul class="messages">
+	    {% for message in messages %}
+	      <li class="{{ message.tags }}">{{ message }}</li>
+	    {% endfor %}
+	  </ul>
+	{% endif %}
+    <button type="submit">Пройти регистрацию</button>
+  </form>
+{% endblock %}
